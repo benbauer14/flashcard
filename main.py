@@ -30,8 +30,8 @@ window.minsize(width=800, height=650)
 window.config(padx=50, pady=50, bg=BACKGROUND_COLOR)
 
 canvas_card = tkinter.Canvas(width=800, height=550, bg=BACKGROUND_COLOR, highlightthickness=0 )
-flash_card_front = tkinter.PhotoImage(file="images/card_front.png")
-canvas_card.create_image(410, 300, image=flash_card_front)
+flash_card = tkinter.PhotoImage(file="images/card_front.png")
+front = canvas_card.create_image(410, 300, image=flash_card)
 canvas_text = canvas_card.create_text(400, 300, text="Test", fill="black", font=("Arial", 30, "normal"))
 canvas_card.grid(column=1, row=1,columnspan=2, rowspan=10)
 
@@ -46,9 +46,23 @@ canvas_wrong.create_image(90,60,image=wrong)
 canvas_wrong.grid(column=2, row=11)
 
 game_over = False
-# while game_over == False:
-canvas_card.delete(canvas_text)
-canvas_text = canvas_card.create_text(400, 300, text=randomWord()[0], fill="black", font=("Arial", 30, "normal"))
-    # time.sleep(3)
+response = False
+while game_over == False:
+    word = randomWord()
+    canvas_card.delete(canvas_text)
+    canvas_text = canvas_card.create_text(400, 300, text=word[0], fill="black", font=("Arial", 30, "normal"))
+    canvas_card.update()
+    time.sleep(5)
+    canvas_card.delete(front)
+    flash_card = tkinter.PhotoImage(file="images/card_back.png")
+    back = canvas_card.create_image(410, 300, image=flash_card)
+    canvas_card.delete(canvas_text)
+    canvas_text = canvas_card.create_text(400, 300, text=word[1], fill="black", font=("Arial", 30, "normal"))
+
+    while response == False
+# time.sleep(20)
+# game_over = True
+
+
 
 window = tkinter.mainloop()
