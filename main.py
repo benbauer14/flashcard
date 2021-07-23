@@ -5,7 +5,8 @@ import csv
 import time
 from tkinter.constants import COMMAND
 master_list = []
-englishword = ""
+words = []
+wordsIndex = -1
 # ----------LOAD CSV------------
 def onLoad():
     with open("data/french_words.csv") as file:
@@ -18,37 +19,42 @@ def onLoad():
                 master_list.append([row[0], row[1]])
 # -------Random Word-----------
 def randomWord():
-    global master_list
+    global master_list, words, wordsIndex
     randomitem = random.randint(0, len(master_list) -1)
+    wordsIndex = randomitem
     words = master_list[randomitem]
     canvas_card.itemconfig(canvas_text, text=words[0])
-    global englishword 
-    englishword= words[1]
+    print(f"fr={words[0]} en={words[1]}")
     # return words
 
 # ------------Right Click---------
 def correctClick():
-    global fliptimer
+    global master_list, fliptimer, words, wordsIndex
+    master_list.pop(wordsIndex)
+    with open("data/french_words.csv", "w") as file:
+        file.write("French,English\n")
+        for row in master_list:
+            file.write(row[0] + "," + row[1]+"\n")
     window.after_cancel(fliptimer)
     randomWord()
-    # canvas_card.itemconfig(cards, image=front_card)
-    # canvas_card.itemconfig(canvas_text, fill="black")
-    fliptimer = window.after(3000,flipCard())
+    canvas_card.itemconfig(cards, image=front_card)
+    canvas_card.itemconfig(canvas_text, text=words[0],fill="black")
+    fliptimer = window.after(3000,func=flipCard)
 
 # ------------Wrong Click---------
 def wrongClick():
+    global fliptimer, words
     window.after_cancel(fliptimer)
-    print("Wrong!")
     randomWord()
     canvas_card.itemconfig(cards, image=front_card)
-    canvas_card.itemconfig(canvas_text, fill="black")
-    fliptimer = window.after(3000,flipCard())
+    canvas_card.itemconfig(canvas_text, text=words[0], fill="black")
+    fliptimer = window.after(3000,func=flipCard)
 
 # ------------Flip Card-------------
 def flipCard():
-    canvas_card.delete()
+    global words
     canvas_card.itemconfig(cards, image=back_card)
-    canvas_card.itemconfig(canvas_text, text=englishword, fill="white")
+    canvas_card.itemconfig(canvas_text, text=words[1], fill="white")
 
 # ------------UI--------------
 
